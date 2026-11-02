@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>अपनी दुकान | Online Shopping</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f6fa;color:#222}
+header{background:#fff;padding:15px;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px #ddd}
+.logo{font-size:25px;font-weight:bold;color:#f47721}
+.search{display:flex;gap:8px;margin-top:12px}
+.search input{flex:1;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:15px}
+button{background:#f47721;color:white;border:0;border-radius:8px;padding:11px 15px}
+nav{display:flex;gap:18px;overflow:auto;padding:14px;background:white;white-space:nowrap}
+nav a{color:#333;text-decoration:none;font-weight:bold}
+.banner{margin:15px;padding:25px 18px;background:linear-gradient(120deg,#ff8c32,#f4511e);border-radius:14px;color:white}
+.banner h1{font-size:28px;margin:0 0 10px}
+.banner p{font-size:15px}
+.section{padding:15px}
+.section h2{font-size:20px}
+.categories{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.cat{background:white;text-align:center;padding:13px 4px;border-radius:10px;font-size:13px}
+.cat span{font-size:27px;display:block;margin-bottom:7px}
+.products{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.product{background:white;border-radius:10px;overflow:hidden;padding-bottom:12px}
+.product img{width:100%;height:145px;object-fit:contain;background:#fff}
+.product h3{font-size:14px;margin:9px}
+.price{font-weight:bold;color:#e85c16;margin:8px}
+.product button{margin:0 8px;width:calc(100% - 16px)}
+footer{text-align:center;background:#222;color:white;padding:25px;margin-top:20px}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">🛍️ अपनी दुकान</div>
+<div>हर जरूरत का सामान, आपके लिए!</div>
+<div class="search">
+<input id="search" placeholder="सामान खोजें...">
+<button onclick="searchProducts()">खोजें</button>
+</div>
+</header>
+
+<nav>
+<a href="#">होम</a>
+<a href="#categories">कैटेगरी</a>
+<a href="#products">प्रोडक्ट</a>
+<a href="#cart">कार्ट 🛒 <span id="count">0</span></a>
+</nav>
+
+<div class="banner">
+<h1>स्वागत है अपनी दुकान पर!</h1>
+<p>आपकी पसंद, आपकी जरूरत और आपकी अपनी ऑनलाइन दुकान।</p>
+<button onclick="document.getElementById('products').scrollIntoView()">अभी खरीदें</button>
+</div>
+
+<section class="section" id="categories">
+<h2>🛍️ हमारी कैटेगरी</h2>
+<div class="categories">
+<div class="cat"><span>👕</span>कपड़े</div>
+<div class="cat"><span>📱</span>इलेक्ट्रॉनिक्स</div>
+<div class="cat"><span>🏠</span>घर का सामान</div>
+<div class="cat"><span>👟</span>जूते</div>
+<div class="cat"><span>💄</span>ब्यूटी</div>
+<div class="cat"><span>🧸</span>खिलौने</div>
+<div class="cat"><span>⌚</span>घड़ियां</div>
+<div class="cat"><span>🎒</span>अन्य सामान</div>
+</div>
+</section>
+
+<section class="section" id="products">
+<h2>⭐ लोकप्रिय प्रोडक्ट</h2>
+<div class="products" id="productList"></div>
+</section>
+
+<section class="section" id="cart">
+<h2>🛒 आपका कार्ट</h2>
+<div id="cartItems">अभी आपका कार्ट खाली है।</div>
+<h3 id="total">कुल: ₹0</h3>
+</section>
+
+<footer>
+<h2>अपनी दुकान</h2>
+<p>हर जरूरत का सामान, अब ऑनलाइन।</p>
+<p>© 2026 Apni Dukaan</p>
+</footer>
+
+<script>
+const products=[
+{name:"स्टाइलिश टी-शर्ट",price:399,emoji:"👕"},
+{name:"वायरलेस हेडफोन",price:799,emoji:"🎧"},
+{name:"स्पोर्ट्स शूज",price:999,emoji:"👟"},
+{name:"हैंडबैग",price:599,emoji:"👜"},
+{name:"स्मार्ट घड़ी",price:1199,emoji:"⌚"},
+{name:"सनग्लास",price:299,emoji:"🕶️"}
+];
+let cart=[];
+function renderProducts(list=products){
+document.getElementById("productList").innerHTML=list.map((p,i)=>`
+<div class="product">
+<div style="height:145px;display:grid;place-items:center;font-size:65px">${p.emoji}</div>
+<h3>${p.name}</h3>
+<div class="price">₹${p.price}</div>
+<button onclick="addCart('${p.name}',${p.price})">कार्ट में जोड़ें</button>
+</div>`).join("");
+}
+function addCart(name,price){
+cart.push({name,price});
+renderCart();
+}
+function renderCart(){
+document.getElementById("count").innerText=cart.length;
+document.getElementById("cartItems").innerHTML=cart.length?
+cart.map((p,i)=>`<p>${p.name} – ₹${p.price} <button onclick="removeCart(${i})">हटाएं</button></p>`).join(""):"अभी आपका कार्ट खाली है।";
+document.getElementById("total").innerText="कुल: ₹"+cart.reduce((s,p)=>s+p.price,0);
+}
+function removeCart(i){cart.splice(i,1);renderCart();}
+function searchProducts(){
+let q=document.getElementById("search").value.toLowerCase();
+renderProducts(products.filter(p=>p.name.toLowerCase().includes(q)));
+}
+renderProducts();
+</script>
+</body>
+</html>
